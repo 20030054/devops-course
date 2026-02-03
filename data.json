@@ -1,12 +1,20 @@
 [
     {
-        "title": "Week 1: Intro to Docker",
+        "title": "Week 1: Intro to Git",
         "type": "slides",
         "link": "https://drive.google.com/your-share-link"
     },
+
+     {
+        "title": "Week 2: Intro to Docker",
+        "type": "slides",
+        "link": "https://drive.google.com/your-share-link"
+    },
+    
     {
         "title": "Lab 1 Tutorial",
         "type": "video",
         "link": "https://drive.google.com/your-video-link"
     }
+
 ]
