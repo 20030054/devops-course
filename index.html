@@ -22,7 +22,7 @@
 <body class="flex h-screen">
 
     <aside class="w-64 glass-sidebar text-white flex flex-col p-6 shrink-0 z-20">
-        <div class="mb-10 px-2">
+        <div class="mb-10 px-2 cursor-default select-none" ondblclick="handleAdminAccess()">
             <h1 class="text-xl font-bold tracking-tight text-blue-400 italic flex items-center">
                 <i class="fas fa-terminal mr-2"></i>DEVOPS<span class="text-white">25</span>
             </h1>
@@ -36,11 +36,6 @@
             <button onclick="switchView('materials')" id="nav-materials" class="nav-btn w-full flex items-center p-3 rounded-xl text-slate-400 hover:text-white transition">
                 <i class="fas fa-folder-open mr-3 w-5"></i> Course Content
             </button>
-            <div class="pt-6 mt-6 border-t border-slate-800">
-                <button onclick="handleAdminAccess()" class="w-full flex items-center p-3 rounded-xl bg-slate-800/50 text-slate-400 hover:text-blue-400 transition">
-                    <i class="fas fa-user-shield mr-3 w-5"></i> Faculty Portal
-                </button>
-            </div>
         </nav>
 
         <div class="bg-blue-600/10 p-4 rounded-2xl border border-blue-500/20">
@@ -112,11 +107,11 @@
                     <div class="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
                         <div>
                             <h3 class="text-xl font-bold text-slate-800 mb-4">Instructor Guidelines</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-4">Please ensure all GitHub repository links for your assignments are submitted through the portal before the Thursday lab sessions.</p>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-4">Access lab manuals and slides via the Content tab. Updates are pushed weekly via GitHub.</p>
                         </div>
                         <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
                             <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Prerequisites</p>
-                            <p class="text-xs text-blue-800 font-semibold">Docker Desktop, Git Bash, VS Code</p>
+                            <p class="text-xs text-blue-800 font-semibold">AWS Academy, Docker, Kubernetes</p>
                         </div>
                     </div>
                 </div>
@@ -186,12 +181,15 @@
             if(viewId === 'materials') renderContent(database);
         }
 
+        // --- UPDATED STEALTH ADMIN ACCESS ---
         function handleAdminAccess() {
-            const pass = prompt("Faculty Access Key:");
+            const pass = prompt("Access Restricted. Enter Management Key:");
             if(pass === "devops2025") {
                 switchView('admin');
                 renderAdminUI();
-            } else { alert("Unauthorized access."); }
+            } else { 
+                alert("Unauthorized."); 
+            }
         }
 
         function renderContent(items) {
@@ -257,7 +255,7 @@
             a.href = url;
             a.download = 'data.json';
             a.click();
-            alert("SUCCESS!\n1. Downloaded 'data.json'\n2. Upload it to your GitHub Repo to update students.");
+            alert("SUCCESS: data.json downloaded. Upload to GitHub to update.");
         }
 
         function searchContent() {
