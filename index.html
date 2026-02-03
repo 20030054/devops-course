@@ -3,141 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps & Cloud Foundations 2025</title>
+    <title>DevOps & Cloud 2025 | Course Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; }
-        .glass-sidebar { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; overflow: hidden; }
+        .glass-sidebar { background: #0f172a; }
         .content-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .content-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 1.5rem; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .active-tab { border-right: 4px solid #3b82f6; background: rgba(59, 130, 246, 0.1); color: #60a5fa !important; }
+        .active-nav { background: #2563eb; color: white !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .status-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body class="flex h-screen">
 
-    <aside class="w-72 glass-sidebar text-white flex flex-col p-6 z-20">
+    <aside class="w-64 glass-sidebar text-white flex flex-col p-6 shrink-0 z-20">
         <div class="mb-10 px-2">
-            <h1 class="text-2xl font-bold tracking-tighter flex items-center">
-                <i class="fas fa-terminal text-blue-500 mr-3"></i>DEVOPS<span class="text-blue-400">25</span>
+            <h1 class="text-xl font-bold tracking-tight text-blue-400 italic flex items-center">
+                <i class="fas fa-terminal mr-2"></i>DEVOPS<span class="text-white">25</span>
             </h1>
-            <p class="text-[10px] text-slate-500 font-mono mt-1 tracking-[0.2em]">SPRING SEMESTER FOUNDATIONS</p>
+            <p class="text-[9px] text-slate-500 font-mono mt-1 uppercase tracking-widest">Spring Semester</p>
         </div>
         
         <nav class="flex-1 space-y-2">
-            <button onclick="showSection('home')" id="btn-home" class="nav-btn active-tab w-full flex items-center p-4 rounded-xl text-slate-400 hover:text-white transition">
-                <i class="fas fa-house-chimney mr-4"></i> Overview
+            <button onclick="switchView('home')" id="nav-home" class="nav-btn active-nav w-full flex items-center p-3 rounded-xl text-slate-400 hover:text-white transition">
+                <i class="fas fa-columns mr-3 w-5"></i> Dashboard
             </button>
-            <button onclick="showSection('resources')" id="btn-resources" class="nav-btn w-full flex items-center p-4 rounded-xl text-slate-400 hover:text-white transition">
-                <i class="fas fa-layer-group mr-4"></i> Materials
+            <button onclick="switchView('materials')" id="nav-materials" class="nav-btn w-full flex items-center p-3 rounded-xl text-slate-400 hover:text-white transition">
+                <i class="fas fa-folder-open mr-3 w-5"></i> Course Content
             </button>
             <div class="pt-6 mt-6 border-t border-slate-800">
-                <button onclick="toggleAdmin()" class="w-full flex items-center p-4 rounded-xl bg-slate-800/50 text-slate-400 hover:bg-blue-600 hover:text-white transition group">
-                    <i class="fas fa-lock-open mr-4 group-hover:rotate-12 transition"></i> Admin Portal
+                <button onclick="handleAdminAccess()" class="w-full flex items-center p-3 rounded-xl bg-slate-800/50 text-slate-400 hover:text-blue-400 transition">
+                    <i class="fas fa-user-shield mr-3 w-5"></i> Faculty Portal
                 </button>
             </div>
         </nav>
 
         <div class="bg-blue-600/10 p-4 rounded-2xl border border-blue-500/20">
-            <p class="text-xs text-blue-400 font-bold mb-1">Server Status</p>
-            <div class="flex items-center text-[10px] text-blue-100">
-                <span class="h-2 w-2 bg-green-500 rounded-full mr-2 animate-pulse"></span> Systems Operational
+            <div class="flex items-center text-[10px] text-blue-400 font-bold mb-1 uppercase tracking-tighter">
+                <span class="h-2 w-2 bg-green-500 rounded-full mr-2 status-pulse"></span> Server: Operational
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto relative bg-slate-50">
-        <header class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 px-10 py-4 flex justify-between items-center z-10">
-            <div class="relative w-96">
-                <i class="fas fa-search absolute left-4 top-3.5 text-slate-400"></i>
-                <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Search labs, slides, or tutorials..." 
-                class="w-full pl-12 pr-4 py-2.5 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-blue-500 outline-none transition">
-            </div>
-            <div class="flex items-center space-x-6">
-                <div class="text-right">
-                    <p class="text-xs font-bold text-slate-400 uppercase">Current Unit</p>
-                    <p class="text-sm font-bold text-slate-800">Container Orchestration</p>
-                </div>
-                <div class="h-10 w-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-200">
-                    <i class="fas fa-user-graduate"></i>
+    <main class="flex-1 flex flex-col min-w-0">
+        <header class="bg-white/80 backdrop-blur-md border-b px-10 py-5 flex justify-between items-center z-10">
+            <h2 id="view-title" class="text-lg font-bold text-slate-800 uppercase tracking-wide">Dashboard</h2>
+            <div class="flex items-center space-x-4">
+                <div class="relative hidden md:block">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                    <input type="text" id="searchInput" onkeyup="searchContent()" placeholder="Filter materials..." 
+                           class="pl-9 pr-4 py-2 bg-slate-100 border-none rounded-lg text-xs focus:ring-2 focus:ring-blue-500 outline-none w-64">
                 </div>
             </div>
         </header>
 
-        <div class="p-10 max-w-7xl mx-auto">
-            <section id="home-section" class="content-view space-y-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-slate-800 rounded-[2.5rem] p-12 text-white shadow-2xl relative overflow-hidden">
-                        <div class="relative z-10">
-                            <h2 class="text-5xl font-extrabold leading-tight mb-6">Mastering the <br><span class="text-blue-400">Cloud Ecosystem</span></h2>
-                            <p class="text-slate-400 text-lg max-w-md mb-8 italic text-blue-100/70">"Automation is not just a tool; it's a culture."</p>
-                            <button onclick="showSection('resources')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-4 rounded-2xl transition shadow-lg shadow-blue-600/30">
-                                Explore Materials <i class="fas fa-arrow-right ml-2"></i>
-                            </button>
-                        </div>
-                        <i class="fas fa-server absolute -right-10 -bottom-10 text-[20rem] text-white/5 rotate-12"></i>
+        <div class="flex-1 overflow-y-auto p-10 bg-slate-50/30">
+            
+            <section id="view-home" class="view-section space-y-8 animate-in fade-in duration-500">
+                <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 rounded-[2.5rem] p-12 text-white shadow-2xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-4xl font-extrabold mb-3">Cloud Foundations <span class="text-blue-400">2025</span></h2>
+                        <p class="text-slate-400 text-lg max-w-xl font-light">Your central hub for Infrastructure as Code, CI/CD pipelines, and Orchestration mastery.</p>
                     </div>
-                    
-                    <div class="bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-sm">
-                        <h3 class="font-bold text-lg mb-6 flex items-center"><i class="fas fa-calendar-day mr-3 text-blue-600"></i>Course Roadmap</h3>
-                        <div class="space-y-6">
-                            <div class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold mr-4 shrink-0">01</div>
-                                <div><p class="font-bold text-sm">Infrastructure as Code</p><p class="text-xs text-slate-500">Terraform & Ansible Basics</p></div>
+                    <i class="fas fa-cloud-sun absolute -right-10 -bottom-10 text-[18rem] text-white/5 rotate-12"></i>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-xl font-bold text-slate-800 flex items-center">
+                                <i class="fas fa-calendar-alt text-blue-600 mr-3"></i> Class Schedule
+                            </h3>
+                            <span class="px-3 py-1 bg-green-50 text-green-600 text-[10px] font-black rounded-full uppercase">Current Semester</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center p-5 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-blue-400 transition-all">
+                                <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex flex-col items-center justify-center mr-4 group-hover:bg-blue-600 group-hover:text-white transition-all font-bold">
+                                    <span class="text-[10px] uppercase">Mon</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-slate-800 font-mono">14:00 - 15:30</p>
+                                    <p class="text-xs text-slate-500 italic">Cloud Computing Theory</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] bg-slate-200 px-2 py-1 rounded text-slate-600 font-bold">Room 402</span>
+                                </div>
                             </div>
-                            <div class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs font-bold mr-4 shrink-0">02</div>
-                                <div><p class="font-bold text-sm">CI/CD Pipelines</p><p class="text-xs text-slate-500">GitHub Actions & Jenkins</p></div>
+                            <div class="flex items-center p-5 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-blue-400 transition-all">
+                                <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex flex-col items-center justify-center mr-4 group-hover:bg-blue-600 group-hover:text-white transition-all font-bold">
+                                    <span class="text-[10px] uppercase">Thu</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-slate-800 font-mono">11:00 - 12:30</p>
+                                    <p class="text-xs text-slate-500 italic">DevOps Practical Lab</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] bg-slate-200 px-2 py-1 rounded text-slate-600 font-bold">IT Lab 01</span>
+                                </div>
                             </div>
-                            <div class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xs font-bold mr-4 shrink-0">03</div>
-                                <div><p class="font-bold text-sm">Kubernetes & Scale</p><p class="text-xs text-slate-500">Advanced Orchestration</p></div>
-                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-[2rem] p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">Instructor Guidelines</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-4">Please ensure all GitHub repository links for your assignments are submitted through the portal before the Thursday lab sessions.</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                            <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Prerequisites</p>
+                            <p class="text-xs text-blue-800 font-semibold">Docker Desktop, Git Bash, VS Code</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="resources-section" class="content-view hidden">
-                <div class="flex justify-between items-end mb-10">
-                    <div>
-                        <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Course Materials</h2>
-                        <p class="text-slate-500 mt-2">Filter through lectures, labs, and interactive tutorials.</p>
-                    </div>
-                    <div class="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
-                        <button onclick="filterType('all')" class="px-6 py-2 rounded-lg text-sm font-bold bg-slate-900 text-white">All</button>
-                        <button onclick="filterType('video')" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">Videos</button>
-                        <button onclick="filterType('notes')" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">Notes</button>
-                    </div>
-                </div>
-                <div id="resource-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <section id="view-materials" class="view-section hidden">
+                <div id="content-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     </div>
             </section>
 
-            <section id="admin-section" class="content-view hidden max-w-4xl mx-auto">
-                <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden">
-                    <div class="p-8 border-b bg-slate-50 flex justify-between items-center">
-                        <h3 class="text-2xl font-bold italic text-slate-800">Faculty Dashboard</h3>
-                        <button onclick="exportData()" class="bg-green-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-green-700 transition">
-                            <i class="fas fa-file-export mr-2"></i> Deploy Changes (Export JSON)
+            <section id="view-admin" class="view-section hidden max-w-4xl mx-auto">
+                <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-slate-200">
+                    <div class="flex justify-between items-center mb-10">
+                        <h3 class="text-2xl font-bold italic">Admin Console</h3>
+                        <button onclick="exportDB()" class="bg-green-600 text-white px-6 py-3 rounded-2xl text-xs font-bold hover:bg-green-700 transition shadow-lg shadow-green-200">
+                            <i class="fas fa-cloud-upload-alt mr-2"></i> EXPORT DATA.JSON
                         </button>
                     </div>
-                    <div class="p-10 space-y-8">
-                        <form id="adminForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form id="adminForm" class="space-y-6 bg-slate-50 p-8 rounded-3xl border border-slate-100">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="md:col-span-2">
-                                <label class="block text-xs font-black uppercase text-slate-400 mb-2">Content Heading</label>
-                                <input type="text" id="title" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-500 outline-none transition" placeholder="e.g. Week 4: Docker Compose Lab" required>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Title</label>
+                                <input type="text" id="title" class="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Week 3: Jenkins Pipelines" required>
                             </div>
                             <div>
-                                <label class="block text-xs font-black uppercase text-slate-400 mb-2">Category</label>
-                                <select id="type" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none">
-                                    <option value="notes">Lecture Notes / Slides</option>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Type</label>
+                                <select id="type" class="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none">
+                                    <option value="notes">Lecture Slides/Notes</option>
                                     <option value="video">Video Tutorial</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-black uppercase text-slate-400 mb-2">Drive URL</label>
-                                <input type="text" id="link" class="w-full p-4 bg-slate-50 border
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Drive URL</label>
+                                <input type="text" id="link" class="w-full p-4 bg-white border border-slate-200 rounded-xl outline-none" placeholder="Paste link here" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-blue-600 transition shadow-xl">Add Resource</button>
+                    </form>
+                    <div id="admin-list" class="mt-10 space-y-3">
+                        </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        let database = [];
+
+        async function init() {
+            try {
+                const res = await fetch('data.json?v=' + Date.now());
+                if(res.ok) {
+                    database = await res.json();
+                    renderContent(database);
+                }
+            } catch (e) { console.log("Init: Data.json not yet available."); }
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            const navBtn = document.getElementById('nav-' + viewId);
+            if(navBtn) navBtn.classList.add('active-nav');
+            document.getElementById('view-title').innerText = viewId;
+            if(viewId === 'materials') renderContent(database);
+        }
+
+        function handleAdminAccess() {
+            const pass = prompt("Faculty Access Key:");
+            if(pass === "devops2025") {
+                switchView('admin');
+                renderAdminUI();
+            } else { alert("Unauthorized access."); }
+        }
+
+        function renderContent(items) {
+            const grid = document.getElementById('content-grid');
+            grid.innerHTML = items.length === 0 ? '<p class="text-slate-400 italic">Repository currently empty.</p>' : '';
+            
+            items.forEach(item => {
+                const cleanLink = item.link.replace('/view?usp=sharing', '/preview').replace('/edit', '/preview');
+                const card = item.type === 'video' ? `
+                    <div class="content-card bg-white p-6 rounded-[2rem] border shadow-sm col-span-full">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-3"><i class="fas fa-play"></i></div>
+                            <h4 class="text-lg font-bold text-slate-800">${item.title}</h4>
+                        </div>
+                        <div class="video-container"><iframe src="${cleanLink}" allow="autoplay"></iframe></div>
+                    </div>` : `
+                    <div class="content-card bg-white p-8 rounded-[2rem] border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="h-12 w-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6"><i class="fas fa-file-alt text-xl"></i></div>
+                            <h4 class="text-lg font-bold text-slate-800 leading-snug mb-2">${item.title}</h4>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Digital Resource</p>
+                        </div>
+                        <a href="${cleanLink}" target="_blank" class="block w-full text-center py-4 bg-slate-900 text-white rounded-2xl text-xs font-bold hover:bg-blue-600 transition shadow-lg mt-8">ACCESS FILE</a>
+                    </div>`;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        document.getElementById('adminForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            database.unshift({
+                id: Date.now(),
+                title: document.getElementById('title').value,
+                type: document.getElementById('type').value,
+                link: document.getElementById('link').value
+            });
+            renderAdminUI();
+            e.target.reset();
+        });
+
+        function renderAdminUI() {
+            const list = document.getElementById('admin-list');
+            list.innerHTML = "";
+            database.forEach(item => {
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="flex justify-between items-center p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                        <span class="text-sm font-bold text-slate-700">${item.title}</span>
+                        <button onclick="removeItem(${item.id})" class="text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl text-xs font-black">DELETE</button>
+                    </div>
+                `);
+            });
+        }
+
+        function removeItem(id) {
+            database = database.filter(i => i.id !== id);
+            renderAdminUI();
+        }
+
+        function exportDB() {
+            const blob = new Blob([JSON.stringify(database, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            a.click();
+            alert("SUCCESS!\n1. Downloaded 'data.json'\n2. Upload it to your GitHub Repo to update students.");
+        }
+
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = database.filter(i => i.title.toLowerCase().includes(query));
+            renderContent(filtered);
+            if(query !== "") switchView('materials');
+        }
+
+        init();
+    </script>
+</body>
+</html>
